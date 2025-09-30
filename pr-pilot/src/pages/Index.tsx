@@ -33,7 +33,11 @@ const Index = () => {
                 PR Pilot
               </span>
             </div>
-            
+            <div className="flex items-center gap-4">
+              <Button variant="ghost" asChild>
+                <Link to="/auth">Sign In</Link>
+              </Button>
+            </div>
           </div>
         </div>
       </header>

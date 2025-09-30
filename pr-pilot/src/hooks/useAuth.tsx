@@ -8,6 +8,7 @@ interface AuthContextType {
   loading: boolean;
   signUp: (email: string, password: string) => Promise<{ error: any }>;
   signIn: (email: string, password: string) => Promise<{ error: any }>;
+  signInWithGitHub: () => Promise<{ error: any }>;
   signOut: () => Promise<void>;
 }
 
@@ -71,6 +72,17 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     return { error };
   };
 
+  const signInWithGitHub = async () => {
+    const redirectUrl = `${window.location.origin}/`;
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: 'github',
+      options: {
+        redirectTo: redirectUrl,
+      },
+    });
+    return { error };
+  };
+
   const signOut = async () => {
     await supabase.auth.signOut();
   };
@@ -81,6 +93,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     loading,
     signUp,
     signIn,
+    signInWithGitHub,
     signOut,
   };
 
