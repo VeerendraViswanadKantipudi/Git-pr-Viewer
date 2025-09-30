@@ -8,7 +8,7 @@ const Auth = () => {
   const { user, signInWithGitHub } = useAuth();
 
   if (user) {
-    return <Navigate to="/" replace />;
+    return <Navigate to="/dashboard" replace />;
   }
 
   const handleGitHubSignIn = async () => {
