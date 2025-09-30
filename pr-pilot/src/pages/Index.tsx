@@ -33,14 +33,7 @@ const Index = () => {
                 PR Pilot
               </span>
             </div>
-            <div className="flex items-center gap-4">
-              <Button variant="ghost" asChild>
-                <Link to="/auth">Sign In</Link>
-              </Button>
-              <Button asChild>
-                <Link to="/auth">Get Started</Link>
-              </Button>
-            </div>
+            
           </div>
         </div>
       </header>
@@ -60,12 +53,6 @@ const Index = () => {
             </div>
             
             <div className="flex items-center justify-center gap-4">
-              <Button size="lg" className="bg-gradient-to-r from-primary to-accent text-lg px-8 py-6" asChild>
-                <Link to="/auth">
-                  <Github className="h-5 w-5 mr-2" />
-                  Connect GitHub
-                </Link>
-              </Button>
               <Button variant="outline" size="lg" className="text-lg px-8 py-6">
                 Learn More
               </Button>
@@ -157,7 +144,7 @@ const Index = () => {
           </div>
         </section>
 
-        {/* CTA Section */}
+        {/* CTA Section (login removed) */}
         <section className="py-20 text-center">
           <Card className="border-2 bg-gradient-to-br from-card to-muted/20 p-12">
             <CardContent className="space-y-6">
@@ -165,12 +152,6 @@ const Index = () => {
               <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
                 Join developers who are already using PR Pilot to streamline their GitHub workflow
               </p>
-              <Button size="lg" className="bg-gradient-to-r from-primary to-accent text-lg px-8 py-6" asChild>
-                <Link to="/auth">
-                  <Github className="h-5 w-5 mr-2" />
-                  Start Managing Your Repos
-                </Link>
-              </Button>
             </CardContent>
           </Card>
         </section>
