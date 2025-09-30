@@ -60,9 +60,40 @@ This project is built with:
 - shadcn-ui
 - Tailwind CSS
 
-## How can I deploy this project?
+## Environment setup (Render + Supabase)
 
-Simply open [Lovable](https://lovable.dev/projects/ded87351-b94c-4389-b189-d5a95fdb34a5) and click on Share -> Publish.
+Create a `.env` from `.env.example` (do not commit real secrets):
+
+```
+VITE_SUPABASE_URL=https://YOUR_PROJECT_REF.supabase.co
+VITE_SUPABASE_PUBLISHABLE_KEY=YOUR_SUPABASE_ANON_KEY
+VITE_GITHUB_CLIENT_ID=YOUR_PR_VIEWER_OAUTH_APP_CLIENT_ID
+```
+
+### Supabase
+- Authentication → Providers → GitHub (enable, set Client ID/Secret of your “Supabase Login” app)
+- Authentication → URL Configuration
+  - Site URL: https://<your-site>
+  - Allowed Redirect URLs: https://<your-site>/auth
+- Functions → `github-oauth` → Secrets
+  - SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY
+  - GITHUB_CLIENT_ID, GITHUB_CLIENT_SECRET (of your “PR Viewer” app)
+  - Redeploy the function after saving
+
+### GitHub OAuth apps (2 total)
+- Supabase Login app
+  - Callback: `https://<your-project-ref>.supabase.co/auth/v1/callback`
+  - Enter Client ID/Secret in Supabase Providers
+- PR Viewer app (Connect GitHub)
+  - Callback: `https://<your-site>/github-callback`
+  - Client ID in frontend (`VITE_GITHUB_CLIENT_ID`); ID/Secret in function secrets
+
+### Render (Static Site)
+- Root Directory: `pr-pilot`
+- Build Command: `npm ci && npm run build`
+- Publish Directory: `dist`
+- Env vars: set the three `VITE_...` vars above
+- After any env change: Manual Deploy → Clear build cache & deploy
 
 ## Can I connect a custom domain to my Lovable project?
 
