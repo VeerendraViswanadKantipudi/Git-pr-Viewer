@@ -58,7 +58,7 @@ Deno.serve(async (req) => {
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
     );
 
-    const { action, code, userId, accessToken, repoFullName } = await req.json();
+    const { action, code, userId, accessToken, repoFullName, prNumber, comment } = await req.json();
 
     switch (action) {
       case 'exchange_code': {
@@ -147,27 +147,28 @@ Deno.serve(async (req) => {
         const repositories: GitHubRepository[] = await reposResponse.json();
         console.log(`Fetched ${repositories.length} repositories`);
 
-        // Store repositories in database
-        for (const repo of repositories) {
-          const { error } = await supabaseClient
-            .from('repositories')
-            .upsert({
-              id: repo.id,
-              user_id: userId,
-              name: repo.name,
-              full_name: repo.full_name,
-              description: repo.description,
-              html_url: repo.html_url,
-              clone_url: repo.clone_url,
-              default_branch: repo.default_branch,
-              is_private: repo.private,
-              stars_count: repo.stargazers_count,
-              forks_count: repo.forks_count,
-              language: repo.language,
-            });
+        // Store repositories in database (batch upsert)
+        const repoRows = repositories.map((repo) => ({
+          id: repo.id,
+          user_id: userId,
+          name: repo.name,
+          full_name: repo.full_name,
+          description: repo.description,
+          html_url: repo.html_url,
+          clone_url: repo.clone_url,
+          default_branch: repo.default_branch,
+          is_private: repo.private,
+          stars_count: repo.stargazers_count,
+          forks_count: repo.forks_count,
+          language: repo.language,
+        }));
 
-          if (error) {
-            console.error('Repository insert error:', error);
+        if (repoRows.length > 0) {
+          const { error: upsertError } = await supabaseClient
+            .from('repositories')
+            .upsert(repoRows, { onConflict: 'id' });
+          if (upsertError) {
+            console.error('Repository batch upsert error:', upsertError);
           }
         }
 
@@ -211,27 +212,28 @@ Deno.serve(async (req) => {
         const pullRequests: GitHubPullRequest[] = await prsResponse.json();
         console.log(`Fetched ${pullRequests.length} pull requests for ${repoFullName}`);
 
-        // Store pull requests in database
-        for (const pr of pullRequests) {
-          const { error } = await supabaseClient
-            .from('pull_requests')
-            .upsert({
-              id: pr.id,
-              repository_id: repo.id,
-              user_id: userId,
-              number: pr.number,
-              title: pr.title,
-              body: pr.body,
-              state: pr.state,
-              html_url: pr.html_url,
-              head_branch: pr.head.ref,
-              base_branch: pr.base.ref,
-              author_username: pr.user.login,
-              author_avatar_url: pr.user.avatar_url,
-            });
+        // Store pull requests in database (batch upsert)
+        const prRows = pullRequests.map((pr) => ({
+          id: pr.id,
+          repository_id: repo.id,
+          user_id: userId,
+          number: pr.number,
+          title: pr.title,
+          body: pr.body,
+          state: pr.state,
+          html_url: pr.html_url,
+          head_branch: pr.head.ref,
+          base_branch: pr.base.ref,
+          author_username: pr.user.login,
+          author_avatar_url: pr.user.avatar_url,
+        }));
 
-          if (error) {
-            console.error('Pull request insert error:', error);
+        if (prRows.length > 0) {
+          const { error: upsertError } = await supabaseClient
+            .from('pull_requests')
+            .upsert(prRows, { onConflict: 'id' });
+          if (upsertError) {
+            console.error('Pull request batch upsert error:', upsertError);
           }
         }
 
@@ -242,8 +244,6 @@ Deno.serve(async (req) => {
       }
 
       case 'comment_on_pr': {
-        const { prNumber, comment } = await req.json();
-        
         if (!accessToken || !repoFullName || !prNumber || !comment) {
           return new Response(
             JSON.stringify({ error: 'Missing required parameters' }),
