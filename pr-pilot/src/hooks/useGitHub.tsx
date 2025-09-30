@@ -9,11 +9,18 @@ export const useGitHub = () => {
   const [loading, setLoading] = useState(false);
 
   const getGitHubAuthUrl = () => {
-    const clientId = import.meta.env.VITE_GITHUB_CLIENT_ID || 'Ov23liJnr2YKpLOMRy2O';
+    const clientId = import.meta.env.VITE_GITHUB_CLIENT_ID;
+    if (!clientId) {
+      throw new Error('Missing GitHub client ID');
+    }
     const redirectUri = `${window.location.origin}/github-callback`;
     const scope = 'repo user';
-    
-    return `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&scope=${scope}`;
+    const params = new URLSearchParams({
+      client_id: clientId,
+      redirect_uri: redirectUri,
+      scope,
+    });
+    return `https://github.com/login/oauth/authorize?${params.toString()}`;
   };
 
   const exchangeCodeForToken = async (code: string) => {
