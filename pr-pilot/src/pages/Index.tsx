@@ -63,7 +63,7 @@ const Index = () => {
               <Button size="lg" className="bg-gradient-to-r from-primary to-accent text-lg px-8 py-6" asChild>
                 <Link to="/auth">
                   <Github className="h-5 w-5 mr-2" />
-                  Connect GitHub
+                  Sign In with GitHub
                 </Link>
               </Button>
               <Button variant="outline" size="lg" className="text-lg px-8 py-6">
@@ -165,12 +165,14 @@ const Index = () => {
               <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
                 Join developers who are already using PR Pilot to streamline their GitHub workflow
               </p>
-              <Button size="lg" className="bg-gradient-to-r from-primary to-accent text-lg px-8 py-6" asChild>
-                <Link to="/auth">
-                  <Github className="h-5 w-5 mr-2" />
-                  Start Managing Your Repos
-                </Link>
-              </Button>
+              <div>
+                <Button size="lg" className="bg-gradient-to-r from-primary to-accent text-lg px-8 py-6" asChild>
+                  <Link to="/auth">
+                    <Github className="h-5 w-5 mr-2" />
+                    Continue with GitHub
+                  </Link>
+                </Button>
+              </div>
             </CardContent>
           </Card>
         </section>
