@@ -57,7 +57,7 @@ interface Profile {
 const Dashboard = () => {
   const { user, signOut } = useAuth();
   const { toast } = useToast();
-  const { loading, fetchRepositories, fetchPullRequests, commentOnPR } = useGitHub();
+  const { loading, fetchRepositories, fetchPullRequests, commentOnPR, getGitHubAuthUrl } = useGitHub();
   
   const [profile, setProfile] = useState<Profile | null>(null);
   const [repositories, setRepositories] = useState<Repository[]>([]);
@@ -110,8 +110,8 @@ const Dashboard = () => {
   };
 
   const handleConnectGitHub = () => {
-    const authUrl = `https://github.com/login/oauth/authorize?client_id=Ov23liJnr2YKpLOMRy2O&redirect_uri=${encodeURIComponent(window.location.origin + '/github-callback')}&scope=repo%20user`;
-    window.location.href = authUrl;
+    const url = getGitHubAuthUrl();
+    window.location.href = url;
   };
 
   const handleSyncRepositories = async () => {
