@@ -1,0 +1,31 @@
+{
+  "name": "pr-viewer-scratch",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "vitest run --coverage",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.58.0",
+    "@tanstack/react-query": "^5.83.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.30.1"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.0.1",
+    "@types/react": "^18.3.23",
+    "@types/react-dom": "^18.3.7",
+    "@vitejs/plugin-react-swc": "^3.11.0",
+    "jsdom": "^25.0.1",
+    "typescript": "^5.8.3",
+    "vite": "^5.4.19",
+    "vitest": "^2.1.3"
+  }
+}

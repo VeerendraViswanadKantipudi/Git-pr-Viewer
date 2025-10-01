@@ -1,0 +1,12 @@
+services:
+  - type: static
+    name: pr-viewer-scratch
+    buildCommand: npm ci && npm run build
+    staticPublishPath: dist
+    envVars:
+      - key: VITE_SUPABASE_URL
+        sync: false
+      - key: VITE_SUPABASE_PUBLISHABLE_KEY
+        sync: false
+      - key: VITE_GITHUB_CLIENT_ID
+        sync: false
