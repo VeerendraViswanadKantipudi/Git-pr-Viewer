@@ -1,11 +1,32 @@
-import { Navigate } from 'react-router-dom';
+import { useEffect } from 'react';
+import { Navigate, useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { useAuth } from '@/hooks/useAuth';
 import { Github } from 'lucide-react';
+import { supabase } from '@/integrations/supabase/client';
 
 const Auth = () => {
   const { user, signInWithGitHub } = useAuth();
+  const navigate = useNavigate();
+
+  // Handle OAuth hash redirect from Supabase (access_token in URL fragment)
+  useEffect(() => {
+    const hash = window.location.hash;
+    if (!hash) return;
+    const params = new URLSearchParams(hash.substring(1));
+    const accessToken = params.get('access_token');
+    const refreshToken = params.get('refresh_token');
+    if (accessToken && refreshToken) {
+      supabase.auth
+        .setSession({ access_token: accessToken, refresh_token: refreshToken })
+        .finally(() => {
+          // Clean the hash from URL and go to dashboard
+          window.history.replaceState({}, document.title, window.location.pathname);
+          navigate('/dashboard', { replace: true });
+        });
+    }
+  }, [navigate]);
 
   if (user) {
     return <Navigate to="/dashboard" replace />;
