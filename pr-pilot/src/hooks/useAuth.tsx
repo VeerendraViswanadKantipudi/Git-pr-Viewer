@@ -73,13 +73,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   };
 
   const signInWithGitHub = async () => {
-    const redirectUrl = `${window.location.origin}/auth`;
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: 'github',
-      options: {
-        redirectTo: redirectUrl,
-      },
-    });
+    // Let Supabase use the configured Site URL to avoid state mismatch
+    const { error } = await supabase.auth.signInWithOAuth({ provider: 'github' });
     return { error };
   };
 

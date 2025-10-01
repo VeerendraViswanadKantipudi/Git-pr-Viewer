@@ -38,8 +38,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const signInWithGitHub = async () => {
-    const redirectTo = `${window.location.origin}/auth`;
-    await supabase.auth.signInWithOAuth({ provider: "github", options: { redirectTo } });
+    // Let Supabase use its configured Site URL
+    await supabase.auth.signInWithOAuth({ provider: "github" });
   };
 
   const signOut = async () => {
